@@ -1,4 +1,4 @@
-name: EnigMano Instance Deployment V2
+name: EnigMano Instance Deployment V2a
 
 on:
   workflow_dispatch:
@@ -23,9 +23,7 @@ jobs:
         Write-Host "=== ENIGMANO RDP DEPLOYMENT ===" -ForegroundColor Green
         Write-Host "Instance Number: ${{ github.event.inputs.instance_number }}" -ForegroundColor Yellow
         Write-Host "Runner: $env:RUNNER_NAME" -ForegroundColor Yellow
-        Write-Host "Workflow: $env:GITHUB_WORKFLOW" -ForegroundColor Yellow
         
-        # System specs
         Write-Host "`n=== SYSTEM SPECIFICATIONS ===" -ForegroundColor Cyan
         Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, TotalPhysicalMemory
         Get-WmiObject -Class Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
@@ -50,18 +48,12 @@ jobs:
       run: |
         Write-Host "Installing essential software..." -ForegroundColor Green
         
-        # Install Chocolatey
         Set-ExecutionPolicy Bypass -Scope Process -Force
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
         iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         
-        # Install Chrome
         choco install googlechrome -y
-        
-        # Install 7-Zip
         choco install 7zip -y
-        
-        # Install Notepad++
         choco install notepadplusplus -y
         
         Write-Host "Software installation completed!" -ForegroundColor Green
@@ -70,33 +62,23 @@ jobs:
       run: |
         Write-Host "Configuring Chrome with security extensions..." -ForegroundColor Green
         
-        $ChromePrefs = @"
-{
-  "extensions": {
-    "settings": {
-      "cjpalhdlnbpafiamejdnhcphjbkeiagm": {
-        "state": 1,
-        "was_installed_by_default": false,
-        "was_installed_by_oem": false,
-        "was_installed_by_custodian": false,
-        "creation_flags": 1,
-        "location": 1,
-        "manifest": {
-          "name": "uBlock Origin",
-          "version": "1.0"
-        }
-      }
-    }
-  }
-}
-"@
-        
         $ChromeDir = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default"
         if (!(Test-Path $ChromeDir)) {
-          New-Item -ItemType Directory -Path $ChromeDir -Force
+          New-Item -ItemType Directory -Path $ChromeDir -Force | Out-Null
         }
         
-        $ChromePrefs | Out-File -FilePath "$ChromeDir\Preferences" -Encoding UTF8
+        $prefs = @{
+          extensions = @{
+            settings = @{
+              cjpalhdlnbpafiamejdnhcphjbkeiagm = @{
+                state = 1
+                manifest = @{ name = "uBlock Origin"; version = "1.0" }
+              }
+            }
+          }
+        }
+        
+        $prefs | ConvertTo-Json -Depth 10 | Out-File -FilePath "$ChromeDir\Preferences" -Encoding UTF8
         
     - name: Setup Cloudflare WARP
       run: |
@@ -139,9 +121,7 @@ jobs:
           }
         } else {
           Write-Host "Pinggy log file not found. Checking error log..." -ForegroundColor Red
-          if (Test-Path "C:\pinggy.err") {
-            Get-Content "C:\pinggy.err"
-          }
+          if (Test-Path "C:\pinggy.err") { Get-Content "C:\pinggy.err" }
         }
         
         Write-Host "`nConnection Instructions:" -ForegroundColor Yellow
