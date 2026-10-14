@@ -1,4 +1,4 @@
-name: EnigMano Instance Deployment V2a
+name: EnigMano Instance Deployment
 
 on:
   workflow_dispatch:
@@ -67,18 +67,23 @@ jobs:
           New-Item -ItemType Directory -Path $ChromeDir -Force | Out-Null
         }
         
-        $prefs = @{
-          extensions = @{
-            settings = @{
-              cjpalhdlnbpafiamejdnhcphjbkeiagm = @{
-                state = 1
-                manifest = @{ name = "uBlock Origin"; version = "1.0" }
-              }
-            }
-          }
-        }
+        $jsonLines = @(
+          '{',
+          '  "extensions": {',
+          '    "settings": {',
+          '      "cjpalhdlnbpafiamejdnhcphjbkeiagm": {',
+          '        "state": 1,',
+          '        "manifest": {',
+          '          "name": "uBlock Origin",',
+          '          "version": "1.0"',
+          '        }',
+          '      }',
+          '    }',
+          '  }',
+          '}'
+        )
         
-        $prefs | ConvertTo-Json -Depth 10 | Out-File -FilePath "$ChromeDir\Preferences" -Encoding UTF8
+        $jsonLines | Out-File -FilePath "$ChromeDir\Preferences" -Encoding UTF8
         
     - name: Setup Cloudflare WARP
       run: |
