@@ -63,6 +63,17 @@ jobs:
           Invoke-WebRequest -Uri "https://1111-releases.cloudflareclient.com/windows/Cloudflare_WARP_Release-x64.msi" -OutFile "CloudflareWARP.msi"
           Start-Process msiexec.exe -Wait -ArgumentList '/I CloudflareWARP.msi /quiet'
           Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+          Write-Host "Cloudflare WARP installed successfully!" -ForegroundColor Green
+
         } catch {
           Write-Host "Cloudflare WARP installation failed, continuing..." -ForegroundColor Yellow
         }
