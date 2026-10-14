@@ -58,33 +58,6 @@ jobs:
         
         Write-Host "Software installation completed!" -ForegroundColor Green
         
-    - name: Configure Chrome Extensions
-      run: |
-        Write-Host "Configuring Chrome with security extensions..." -ForegroundColor Green
-        
-        $ChromeDir = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default"
-        if (!(Test-Path $ChromeDir)) {
-          New-Item -ItemType Directory -Path $ChromeDir -Force | Out-Null
-        }
-        
-        $jsonLines = @(
-          '{',
-          '  "extensions": {',
-          '    "settings": {',
-          '      "cjpalhdlnbpafiamejdnhcphjbkeiagm": {',
-          '        "state": 1,',
-          '        "manifest": {',
-          '          "name": "uBlock Origin",',
-          '          "version": "1.0"',
-          '        }',
-          '      }',
-          '    }',
-          '  }',
-          '}'
-        )
-        
-        $jsonLines | Out-File -FilePath "$ChromeDir\Preferences" -Encoding UTF8
-        
     - name: Setup Cloudflare WARP
       run: |
         Write-Host "Setting up Cloudflare WARP..." -ForegroundColor Green
