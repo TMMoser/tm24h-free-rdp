@@ -71,10 +71,9 @@ jobs:
         
     - name: Start Pinggy Tunnel
       run: |
-        Write-Host "Starting Pinggy tunnel..." -ForegroundColor Green
-        $pinggyArgs = "-p 443 -R0:localhost:3389 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 a.pinggy.io"
-        Start-Process -FilePath "ssh" -ArgumentList $pinggyArgs -RedirectStandardOutput "C:\pinggy.log" -RedirectStandardError "C:\pinggy.err" -NoNewWindow
-        Write-Host "Waiting for tunnel to establish..." -ForegroundColor Yellow
+        Write-Host "Starting Pinggy Tunnel" -ForegroundColor Green
+        Start-Process -FilePath "C:\Windows\System32\OpenSSH\ssh.exe" -ArgumentList "-p 443 -R0:localhost:3389 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 a.pinggy.io" -RedirectStandardOutput "C:\pinggy.log" -RedirectStandardError "C:\pinggy.err" -NoNewWindow
+        Write-Host "Waiting for tunnel to establish" -ForegroundColor Yellow
         Start-Sleep -Seconds 15
         
     - name: Get Connection Details
