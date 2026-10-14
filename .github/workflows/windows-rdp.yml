@@ -1,4 +1,4 @@
-name: EnigMano Instance Deployment
+name: EnigMano Instance Deployment V2
 
 on:
   workflow_dispatch:
